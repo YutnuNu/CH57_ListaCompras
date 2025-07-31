@@ -30,6 +30,10 @@ function validarnum(){
     return true;
 }
 
+function precio_rand(){
+    return Math.round(Math.random() * 10000) / 100;
+}
+
 btnAgregar.addEventListener("click", function(event){
     event.preventDefault();
     alertaTexto.innerHTML = " ";
