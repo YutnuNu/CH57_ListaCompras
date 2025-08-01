@@ -1,15 +1,24 @@
 const txtName = document.getElementById("Name");
 const txtNumber = document.getElementById("Number");
+
 const btnAgregar = document.getElementById("btnAgregar");
 const btnClear = document.getElementById("btnClear");
+
 const alertValidaciones = document.getElementById("alertValidaciones");
 const alertaTexto = document.getElementById("alertValidacionesTexto");
+
 const ListaCompras = document.getElementById("tablaListaCompras");
 //toma la tabla de arriba para tomar el tagname y empieza en 0
 const cesta = ListaCompras.getElementsByTagName("tbody").item(0);
 
-let contador = 0;
+const Items = document.getElementById("contadorProductos");
+const totalProductos = document.getElementById("productosTotal");
+const TotalaPagar = document.getElementById("precioTotal");
 
+let contador = 0;
+let costoTotal = 0;
+let productosCesta = 0;
+let datos = new Array();
 
 //condiciones para que el numero sea valido
 function errorNum(){
@@ -58,7 +67,36 @@ btnAgregar.addEventListener("click", function(event){
                         <td>${txtNumber.value}</td>
                         <td>${precio}</td>
                     </tr>`;
+        //nos muestra que elemento se agrega
+        let elemento = {
+            "contador" : contador,
+            "nombre" : txtName.value,
+            "cantidad" : txtNumber.value,
+            "precio" : precio,
+        };
+        datos.push(elemento);
+        //lo guardadmos en el local
+        localStorage.setItem("datos", JSON.stringify(datos));
+        //se agrega debajo del elemento existente
         cesta.insertAdjacentHTML("beforeend", row);
+        //indicador de cuantos productos se han agregado
+        Items.innerText = contador;
+        //total productos
+        productosCesta += Number(txtNumber.value);
+        totalProductos.innerText = productosCesta;
+        costoTotal += precio * Number(txtNumber.value);
+        //formato de moneda MXN
+        TotalaPagar.innerText = new Intl.NumberFormat("es-MX",
+            {style: "currency", currency:"MXN"}).format(costoTotal);
+        //"$" + costoTotal;
+        //generamos el objeto donde estan todos los datos
+        let resumen = {
+            "contador":contador,
+            "productosCesta":productosCesta,
+            "costoTotal":costoTotal,
+        };
+        //guardamos en local como cadena de texto
+        localStorage.setItem("resumen",JSON.stringify(resumen));
         //limpia los campos de entrada
         txtName.value = "";
         txtNumber.value = "";
